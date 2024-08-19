@@ -1,0 +1,24 @@
+[build-system]
+build-backend = "mesonpy"
+requires = ["meson-python", "numpy", "build", "setuptools_scm>=8"]
+
+[project]
+name = "zreion"
+version = "0.0.1"
+description = "A semi-numeric method for simulating reionization."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE"}
+authors = [
+  {name = "Paul La Plante", email = "paul.laplante@unlv.edu"},
+]
+maintainers = [
+  {name = "Paul La Plante", email = "paul.laplante@unlv.edu"},
+]
+dependencies = [
+    "numpy>=1.20.0",
+    "astropy>=2.0",
+    "camb>=1.5.0",
+    "h5py>=2.7",
+    "pytest>=7.0",
+]
