@@ -73,7 +73,9 @@ def generate_initial_conditions(cosmo_params, seed=None):
         The cosmological and simulation parameters of the simulation.
     seed : int, optional
         The initial seed to use for generating random numbers. Allows for
-        reproducible initial conditions when using the same seed.
+        reproducible initial conditions when using the same seed. If not
+        specified, a random seed is chosen between the numbers 1 (inclusive)
+        and 2**31 (exclusive).
 
     Returns
     -------
@@ -91,16 +93,18 @@ def generate_initial_conditions(cosmo_params, seed=None):
     ndm = cosmo_params.ndm
     ic_field = np.empty((ndm + 2, ndm, ndm), dtype=np.float64, order="F")
 
-    if seed is not None:
-        fortran_tools.ic_tools.generate_ics(ic_field, cosmo_params.pk_lin, int(seed))
-    else:
-        fortran_tools.ic_tools.generate_ics(ic_field, cosmo_params.pk_lin)
+    # make a seed if the user didn't give us one
+    if seed is None:
+        rng = np.random.default_rng()
+        seed = np.int32(rng.integers(1, 2**31))
+
+    fortran_tools.ic_tools.generate_ics(ic_field, cosmo_params.pk_lin, np.int32(seed))
 
     return ic_field
 
 
 def calc_density_and_velocity(redshift, cosmo_params, ic_field, dep_scheme=1):
-    """
+    r"""
     Calculate the density and velocity fields at a given redshift.
 
     This function takes a particular redshift and a series of initial conditions
@@ -125,9 +129,9 @@ def calc_density_and_velocity(redshift, cosmo_params, ic_field, dep_scheme=1):
     -------
     density : ndarray of float
         The density field, with shape (ngrid, ngrid, ngrid). This is the total
-        matter density normalized by average cosmic density, 1 + \delta, where
-        \delta is the fractional overdensity. This field should have a mean of 1
-        and a minimum value of 0.
+        matter density normalized by average cosmic density, :math:`1 + \delta`,
+        where :math:`\delta` is the fractional overdensity. This field should
+        have a mean of 1 and a minimum value of 0.
     velocity : ndarray of float
         The velocity field, which shape (3, ngrid, ngrid, ngrid). This is the
         proper velocity in units of km/s.
@@ -246,7 +250,7 @@ def calc_ion_t21(redshift, density, zreion, cosmo_params):
 
 
 class Simulation(object):
-    """
+    r"""
     Convenience object for defining, running, and saving a simulation.
 
     This object has top-level methods for generating 21 cm brightness
@@ -308,13 +312,14 @@ class Simulation(object):
         The sum of neutrino masses, in eV.
     b0_zre : float, optional
         The overall normalization of the zreion bias relation. The default is
-        the inverse of the critical density of halo formation, \delta_c = 1.686.
+        the inverse of the critical density of halo formation,
+        :math:`\delta_c = 1.686`.
     rsmooth_zre : float, optional
         The radius of a spherical tophat window used to smooth the zreion field,
         in units of Mpc/h. Default value is 1 Mpc/h.
     seed : int, optional
         The initial random seed to use for the simulation. If not specified,
-        will default to a random number between 0 (inclusive) and 2**31
+        will default to a random number between 1 (inclusive) and 2**31
         (exclusive).
     dep_scheme : int, optional
         The particle deposition scheme used for generating the density and
@@ -367,8 +372,8 @@ class Simulation(object):
 
         # define initial random seed
         if seed is None:
-            rng = np.default_rng()
-            seed = np.int32(rng.integers(2**31))
+            rng = np.random.default_rng()
+            seed = np.int32(rng.integers(1, 2**31))
         self.seed = seed
 
         # define self-consistent particle deposition scheme

@@ -156,7 +156,7 @@ class CosmoParameters(object):
         self.wde = -1.0
 
         # we can infer Omega_R from the CMB temperature
-        self.tcmb0 = cosmo.tcmb0
+        self.tcmb0 = cosmo.Tcmb0.value
         self.omegar = 4.48e-7 * (1 + 0.69) * self.tcmb0**4 / self.hubble0**2
 
         # power law index of scalar perturbations
