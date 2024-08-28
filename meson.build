@@ -30,19 +30,10 @@ inc_f2py = include_directories(incdir_f2py)
 fortranobject_c = incdir_f2py / 'fortranobject.c'
 
 # MKL include
-# TODO: this is hard-coded for building using ifort on Bridges-2
-incdir_mkl = '/opt/packages/oneapi/v2023.2.0/mkl/2023.2.0/include/'
+# TODO: this is most suitable for building on Bridges-2, and assumes pkg-include is working correctly
+mkl_dep = dependency('mkl-dynamic-ilp64-iomp')
 
-fortran_include = include_directories(incdir_numpy, incdir_f2py, incdir_mkl)
-
-# Libraries
-# TODO: this is hard-coded for building using ifort on Bridges-2
-mkl_intel_ilp64 = declare_dependency(link_args : ['-lmkl_intel_ilp64'])
-mkl_intel_thread = declare_dependency(link_args : ['-lmkl_intel_thread'])
-mkl_core = declare_dependency(link_args : ['-lmkl_core'])
-iomp5 = declare_dependency(link_args : ['-liomp5'])
-lib_dir_0 = declare_dependency(link_args : ['-L/opt/packages/oneapi/v2023.2.0/compiler/2023.2.1/linux/compiler/lib/intel64_lin'])
-lib_dir_1 = declare_dependency(link_args : ['-L/opt/packages/oneapi/v2023.2.0/mkl/2023.2.0/lib/intel64'])
+fortran_include = include_directories(incdir_numpy, incdir_f2py)
 
 # Make f2py do some up-front work
 input_files = [  # order is important!
@@ -70,12 +61,7 @@ py.extension_module(module_name,
                     ],
                     dependencies : [
                       py_dep,
-                      mkl_intel_ilp64,
-                      mkl_intel_thread,
-                      mkl_core,
-                      iomp5,
-                      lib_dir_0,
-                      lib_dir_1,
+                      mkl_dep,
                     ],
                     install : true,
                     subdir: 'zreion')
