@@ -48,6 +48,7 @@ contains
 
     ! Initialize in parallel
     npt = Npart / Ncpu + min(1, mod(Npart, Ncpu))
+    call omp_set_num_threads(Ncpu)
     !$omp parallel        &
     !$omp default(shared) &
     !$omp private(i,j,k)
@@ -104,6 +105,7 @@ contains
     allocate(gradphi(Ndm + 2, Ndm, Ndm, 3))
     allocate(delta2(Ndm + 2, Ndm, Ndm))
 
+    call omp_set_num_threads(Ncpu)
     !$omp parallel        &
     !$omp default(shared) &
     !$omp private(k)
@@ -431,6 +433,7 @@ contains
     ndmr = real(Ndm, kind=8)
 
     ! Compute particle positions + displacement
+    call omp_set_num_threads(Ncpu)
     !$omp parallel do        &
     !$omp default(shared)    &
     !$omp private(i,j,k,x,v)
@@ -462,6 +465,7 @@ contains
     x_dm_gr = real(Ngrid, kind=8) / real(Ndm, kind=8)
 
     ! Construct chaining lists in parallel
+    call omp_set_num_threads(Ncpu)
     !$omp parallel             &
     !$omp default(shared)      &
     !$omp private(icpu,ip,idx) &

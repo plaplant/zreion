@@ -69,6 +69,7 @@ contains
     a      = 0
     sigma  = 1
 
+    call omp_set_num_threads(Ncpu)
     !$omp parallel do                 &
     !$omp default(shared)             &
     !$omp private(j,k,stream,errcode)

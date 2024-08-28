@@ -35,6 +35,7 @@ contains
     Ak = 2 * pi / real(Ngrid, kind=8)
 
     ! Copy density field to zreion
+    call omp_set_num_threads(Ncpu)
     !$omp parallel do     &
     !$omp default(shared) &
     !$omp private(i,j,k)

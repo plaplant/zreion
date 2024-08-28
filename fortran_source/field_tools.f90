@@ -79,6 +79,7 @@ contains
     call link_dm
 
     ! Initialize fields
+    call omp_set_num_threads(Ncpu)
     !$omp parallel do     &
     !$omp default(shared) &
     !$omp private(k)
@@ -162,6 +163,7 @@ contains
     vmin =  huge(vmin)
 
     ! Compute in parallel
+    call omp_set_num_threads(Ncpu)
     !$omp parallel do                      &
     !$omp default(shared)                  &
     !$omp private(i,j,k,d,v)               &
@@ -608,6 +610,7 @@ contains
     tstd = 0
     tmin =  huge(tmin)
     tmax = -huge(tmax)
+    call omp_set_num_threads(Ncpu)
     !$omp parallel do                      &
     !$omp default(shared)                  &
     !$omp private(i,j,k,x,t)               &
