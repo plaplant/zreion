@@ -31,7 +31,7 @@ fortranobject_c = incdir_f2py / 'fortranobject.c'
 
 # MKL include
 # TODO: this is most suitable for building on Bridges-2, and assumes pkg-include is working correctly
-mkl_dep = dependency('mkl-dynamic-ilp64-iomp')
+mkl_dep = dependency('mkl-static-ilp64-iomp')
 
 fortran_include = include_directories(incdir_numpy, incdir_f2py)
 

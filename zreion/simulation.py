@@ -38,12 +38,12 @@ def set_cosmo_parameters(cosmo_params):
     fortran_tools.cosmo_tools.omegar = cosmo_params.omegar
     fortran_tools.cosmo_tools.hubble0 = cosmo_params.hubble0
     fortran_tools.cosmo_tools.sigma8 = cosmo_params.sigma8
-    fortran_tools.cosmo_tools.nsinit = cosmo_params.nsinit
+    fortran_tools.cosmo_tools.nsinit = cosmo_params.ns
     fortran_tools.cosmo_tools.wde = cosmo_params.wde
     fortran_tools.cosmo_tools.tcmb0 = cosmo_params.tcmb0
 
     # Simulation parameters
-    fortran_tools.cosmo_tools.box = cosmo_params.boxsize
+    fortran_tools.cosmo_tools.box = cosmo_params.box
     fortran_tools.cosmo_tools.zmean_zre = cosmo_params.zmean_zre
     fortran_tools.cosmo_tools.b0_zre = cosmo_params.b0_zre
     fortran_tools.cosmo_tools.kb_zre = cosmo_params.kb_zre
@@ -483,8 +483,8 @@ class Simulation(object):
 
         # compute density field at midpoint if needed
         if (self.redshift is None or
-            not np.isclose(self.redshift, zmean_zre)):
-            self.calc_density_velocity(zmean_zre)
+            not np.isclose(self.redshift, self.zmean_zre)):
+            self.calc_density_velocity(self.zmean_zre)
 
         self.zreion = calc_zreion(self.density, self.cosmo_params)
 

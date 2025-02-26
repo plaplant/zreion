@@ -198,6 +198,13 @@ class CosmoParameters(object):
         # set placeholder attribute
         self.pk_lin = None
 
+        # parameters defining zreion method
+        self.b0_zre = b0_zre
+        self.zmean_zre = zmean_zre
+        self.alpha_zre = alpha_zre
+        self.kb_zre = kb_zre
+        self.rsmooth_zre = rsmooth_zre
+
     @property
     def hubble0(self):
         return self.H0 / 100
@@ -242,7 +249,7 @@ class CosmoParameters(object):
         pars = camb.set_params(
             H0=self.H0, ombh2=ombh2, omch2=omch2, As=As, ns=self.ns
         )
-        pars.set_matter_power(reshifts=[0.0], kmax=kmax)
+        pars.set_matter_power(redshifts=[0.0], kmax=kmax)
         results = camb.get_results(pars)
         s8_fid = results.get_sigma8_0()
         As_new = As * self.sigma8**2 / s8_fid**2
